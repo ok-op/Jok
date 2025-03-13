@@ -3,37 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encrypted HTML Viewer</title>
+    <title>Decrypted HTML Loader</title>
     <script>
-        async function decryptFile() {
-            const response = await fetch("encrypted.html"); // এনক্রিপ্টেড ফাইল লোড করুন
-            const encryptedData = await response.arrayBuffer();
-            
-            // ডিক্রিপশন কী ও IV (Encryption Bot-এর সাথে মিলিয়ে নিন)
-            const key = await window.crypto.subtle.importKey(
-                "raw",
-                new TextEncoder().encode("12345678901234567890123456789012"), // 32-byte key
-                { name: "AES-CBC" },
-                false,
-                ["decrypt"]
-            );
+        async function loadDecryptedHTML() {
+            const encryptionKey = "f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6g7h8i9j0k1l2m3n4"; // আপনার KEY
 
-            const iv = new TextEncoder().encode("1234567890123456"); // 16-byte IV
+            // এনক্রিপ্টেড ফাইল লোড করুন
+            let response = await fetch("encryption_index.html");
+            let encryptedText = await response.text();
 
-            const decryptedData = await window.crypto.subtle.decrypt(
-                { name: "AES-CBC", iv: iv },
-                key,
-                encryptedData
-            );
+            // Base64 ডিকোড করুন
+            let decodedText = atob(encryptedText);
 
-            const decoder = new TextDecoder();
-            document.write(decoder.decode(decryptedData)); // HTML দেখান
+            // পেজে HTML রেন্ডার করুন
+            document.getElementById("content").innerHTML = decodedText;
         }
-
-        decryptFile();
     </script>
 </head>
-<body>
-    <h2>Loading Encrypted Page...</h2>
+<body onload="loadDecryptedHTML()">
+    <h2>Decrypted Page Loading...</h2>
+    <div id="content"></div>
 </body>
 </html>
