@@ -1,76 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encrypted HTML Loader</title>
+  <title>Secure Page</title>
+  <script>
+    function decryptPage() {
+      let password = prompt("Enter Password:");
+      if (password === "woodcraft") {
+        document.getElementById("content").style.display = "block";
+      } else {
+        alert("Wrong password!");
+      }
+    }
+  </script>
 </head>
-<body>
-    <h2>Encrypted HTML Loader</h2>
-    <input type="file" id="fileInput" accept=".txt">
-    <button onclick="loadEncryptedFile()">Load & Decrypt</button>
-
-    <h3>Live Website Preview:</h3>
-    <iframe id="previewFrame" style="width: 100%; height: 600px; border: 1px solid black;"></iframe>
-
-    <script>
-        const SECRET_KEY = new TextEncoder().encode("f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6g7h8i9j0k1l2m3n4").slice(0, 32); // 32-byte key
-        const IV = new Uint8Array(16); // 16-byte IV (Same as encryption IV)
-
-        async function loadEncryptedFile() {
-            const fileInput = document.getElementById("fileInput");
-            if (fileInput.files.length === 0) {
-                alert("Please select an encrypted.txt file");
-                return;
-            }
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = async function(event) {
-                const encryptedHex = event.target.result.trim();
-                try {
-                    const encryptedBytes = hexToBytes(encryptedHex);
-                    const decryptedHTML = await decryptHTML(encryptedBytes);
-
-                    // ✅ ডিক্রিপ্ট করা HTML ফাইলকে একটি Data URL বানিয়ে iframe-এ লোড করা
-                    const blob = new Blob([decryptedHTML], { type: "text/html" });
-                    const url = URL.createObjectURL(blob);
-                    document.getElementById("previewFrame").src = url;
-                } catch (error) {
-                    console.error("Decryption Error:", error);
-                    alert("Failed to decrypt the file.");
-                }
-            };
-
-            reader.readAsText(file);
-        }
-
-        async function decryptHTML(encryptedBytes) {
-            const cryptoKey = await crypto.subtle.importKey(
-                "raw",
-                SECRET_KEY,
-                { name: "AES-CTR" },
-                false,
-                ["decrypt"]
-            );
-
-            const decrypted = await crypto.subtle.decrypt(
-                { name: "AES-CTR", counter: IV, length: 128 },
-                cryptoKey,
-                encryptedBytes
-            );
-
-            return new TextDecoder().decode(decrypted);
-        }
-
-        function hexToBytes(hex) {
-            let bytes = new Uint8Array(hex.length / 2);
-            for (let i = 0; i < hex.length; i += 2) {
-                bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
-            }
-            return bytes;
-        }
-    </script>
+<body onload="decryptPage()">
+  <div id="content" style="display:none;">
+    <h1>Welcome to the Decrypted Page</h1>
+    <p>This is your decrypted HTML content.</p>
+  </div>
 </body>
 </html>
