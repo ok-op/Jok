@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Encrypted HTML Viewer</title>
+</head>
+<body>
+    <h2>🔐 Encrypted Data:</h2>
+    <textarea id="encryptedData" rows="5" cols="50"></textarea>
+
+    <h2>🔓 Decrypted Output:</h2>
+    <div id="output" style="border: 1px solid #ccc; padding: 10px;"></div>
+    
+    <button onclick="decryptData()">🔓 Decrypt & Run</button>
+
+    <script>
+        async function decryptData() {
+            const encryptedData = document.getElementById("encryptedData").value;
+            const response = await fetch("https://secretkey.woodmirror.workers.dev/decrypt", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ encryptedData })
+            });
+            const result = await response.json();
+            document.getElementById("output").innerHTML = result.decrypted;
+        }
+    </script>
+</body>
+</html>
