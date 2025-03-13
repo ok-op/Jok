@@ -133,18 +133,16 @@
         }
     </script>
     <script>
-    document.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-    });
+    function isBot() {
+        let userAgent = navigator.userAgent.toLowerCase();
+        let botKeywords = ["bot", "curl", "wget", "python", "scraper"];
+        return botKeywords.some(bot => userAgent.includes(bot));
+    }
 
-    document.addEventListener("keydown", function (e) {
-        if (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")) {
-            e.preventDefault();
-        }
-        if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
-            e.preventDefault();
-        }
-    });
+    if (isBot()) {
+        document.write("Access Denied!");
+        window.stop();
+    }
     </script>
 
 </body>
