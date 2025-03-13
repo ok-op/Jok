@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Encrypted HTML Viewer</title>
+    <title>Encrypted HTML Runner</title>
 </head>
 <body>
-    <h2>🔐 Encrypted Data:</h2>
-    <textarea id="encryptedData" rows="5" cols="50"></textarea>
+    <h2>🔐 Encrypted HTML</h2>
+
+    <!-- এখানে এনক্রিপ্টেড ডাটা রাখা হলো -->
+    <textarea id="encryptedData" rows="10" cols="100">
+        b9984c6b3b9c306ddc55e6ca105458d783586ca8defc65d6fdb68d334eef734d85220a248abfbda1434d3387588007e20479ccc0c3097f24a92cb9b3baa51a7d41cac6954327c92aa6a3e0e21f4d853f64a96dab817ff7d1fe2099ed2df907c2e796f93a51e5c515c5f3ddb1ce7913e603a9ad927c1219e4171af43c86c36adcca364618f108a88d7c6fa9fb28a1e672ef697a805d44e73ca425242809d24566a7bb68c768981f52be7ebcb3f2084e70edda9709179b4803e747aa3a9eec8d3bac0d30118daf94f6b4a5528fceff10a36e6f48abf980d1ec05a34f4deb186d392e20395ea486990f6e75c2e46966d49ea8caf04ed1327c60c0da67999c861c36da9c57b185aa5d2e221dde8b5204a0424a139b390852efbcedc638c9cb8521dda25a4a8ed188e1f590b2b532ad79f34b186e0b8138937826805d9c8eb3cef635993390310da1d3d25d4e1805e028d33fce5291e759b2609f3ed8fdf7fa55d9b09fa1de3b5373dd36c53e57882226fad75232eea2ac49dcd9546eb25101cbbd269e202fd920c03b75ef2f931bc79dada132e6843f5a550f1ff7c0939b459139462143839ec6bf48e9bf9271e78683a76fbf9ad616ce0c5fa6959e6bf6b856b5e8d9d9e2affb0a79869fb5cc394776495f678e2745c009d7ece4f98b9d734ae3243329db836f8b8b25f13bedd224afb69fe1536f6ea48e924eaeff46620c2f4c01ad1f21c1a7a0f67317e6c6ec7de4064a4c2877c36aaef0ac91bd094dc5587047bd0365f21ad8f807a37f55a9debdb4cc7234a6bbf3c30bbf921aa8bc9f5942d4b79adadcb58ad8cb5bcfcf500cbc34a838d8d982ce534736eb6458c106ff73a600e2ca10a00b8ad8308f08bb27cabcaa89058efe4821ef49e82466b7da5f1d014523dc2ef31cafca7a24205980e6f62afb681a14e0f4356067839d28d62baf85b80a5ee9bad191586f86b2c00ca541ab5764a33b62f766ff1c8c0e3977915d70d536ae9de6421421a314c894793c2df720af198cd6b5b1ae9449465d0fa0d173ee365dcd51935fac71d2d6f6c69dfa1bf53786ab597211ae23bf04d798500daa09698528ff5ca2cd228e11add3075b374a96a809da25b41ffb4837d2b23ca22b37019a826ed31cd2be8f60ccf8c99c2b559836534f89fc6f9502a7532937204ace3dcff750365537705bde4b1e92c7522a5777b9eea771183ce10068a1d52333646ba07df9ef46fa4f597c54c289ed9afe5a5a6a6a5446c17c6563e084313deb371cb4faebfd3ae7c7a7c2a11d817837da7bde4d77fd499838e1cfdeb957102100ff
+    </textarea>
+
+    <br>
+    <button onclick="decryptAndRun()">🔓 Decrypt & Run</button>
 
     <h2>🔓 Decrypted Output:</h2>
-    <div id="output" style="border: 1px solid #ccc; padding: 10px;"></div>
-    
-    <button onclick="decryptData()">🔓 Decrypt & Run</button>
+    <iframe id="outputFrame" style="width: 100%; height: 300px; border: 1px solid #ccc;"></iframe>
 
     <script>
-        async function decryptData() {
-            const encryptedData = document.getElementById("encryptedData").value;
+        async function decryptAndRun() {
+            const encryptedData = document.getElementById("encryptedData").value.trim();
+
             const response = await fetch("https://secretkey.woodmirror.workers.dev/decrypt", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ encryptedData })
             });
+
             const result = await response.json();
-            document.getElementById("output").innerHTML = result.decrypted;
+
+            // 🔹 ডিক্রিপ্ট করা HTML iframe এ দেখাও
+            const outputFrame = document.getElementById("outputFrame").contentWindow.document;
+            outputFrame.open();
+            outputFrame.write(result.decrypted);
+            outputFrame.close();
         }
     </script>
 </body>
