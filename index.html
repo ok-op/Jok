@@ -9,11 +9,16 @@
     <h2>Encrypted HTML Loader</h2>
     <input type="file" id="fileInput" accept=".txt">
     <button onclick="loadEncryptedFile()">Load & Decrypt</button>
-    <pre id="output"></pre>
+    
+    <h3>Decrypted Output:</h3>
+    <div id="outputContainer" style="border: 1px solid #ccc; padding: 10px; min-height: 100px;"></div>
+    
+    <h3>Preview:</h3>
+    <iframe id="previewFrame" style="width: 100%; height: 400px; border: 1px solid black;"></iframe>
 
     <script>
-        const SECRET_KEY = new TextEncoder().encode("f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6g7h8i9j0k1l2m3n4").slice(0, 32); // Ensure 32-byte key
-        const IV = new Uint8Array(16); // 16-byte IV (Must match encryption IV)
+        const SECRET_KEY = new TextEncoder().encode("f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6g7h8i9j0k1l2m3n4").slice(0, 32); // 32-byte key
+        const IV = new Uint8Array(16); // 16-byte IV (Same as encryption IV)
 
         async function loadEncryptedFile() {
             const fileInput = document.getElementById("fileInput");
@@ -26,18 +31,23 @@
             const reader = new FileReader();
 
             reader.onload = async function(event) {
-                const encryptedHex = event.target.result.trim(); // Read file content
+                const encryptedHex = event.target.result.trim();
                 try {
-                    const encryptedBytes = hexToBytes(encryptedHex); // Convert Hex to Uint8Array
+                    const encryptedBytes = hexToBytes(encryptedHex);
                     const decryptedText = await decryptHTML(encryptedBytes);
-                    document.getElementById("output").innerText = decryptedText;
+
+                    // ✅ 1. ডিক্রিপ্ট করা HTML দেখাও
+                    document.getElementById("outputContainer").innerText = decryptedText;
+
+                    // ✅ 2. HTML কে প্রিভিউতে রেন্ডার করো
+                    document.getElementById("previewFrame").contentDocument.body.innerHTML = decryptedText;
                 } catch (error) {
                     console.error("Decryption Error:", error);
                     alert("Failed to decrypt the file.");
                 }
             };
 
-            reader.readAsText(file); // Read file as text
+            reader.readAsText(file);
         }
 
         async function decryptHTML(encryptedBytes) {
@@ -50,7 +60,7 @@
             );
 
             const decrypted = await crypto.subtle.decrypt(
-                { name: "AES-CTR", counter: IV, length: 128 }, // AES-CTR requires a counter & length
+                { name: "AES-CTR", counter: IV, length: 128 },
                 cryptoKey,
                 encryptedBytes
             );
@@ -58,7 +68,6 @@
             return new TextDecoder().decode(decrypted);
         }
 
-        // Function to Convert Hex String to Uint8Array
         function hexToBytes(hex) {
             let bytes = new Uint8Array(hex.length / 2);
             for (let i = 0; i < hex.length; i += 2) {
