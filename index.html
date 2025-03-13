@@ -29,7 +29,7 @@
             background-color: white;
             padding: 20px;
             border-radius: 10px;
-            width: 300px;
+            width: 320px;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -43,17 +43,17 @@
         }
 
         .input-box {
-            width: 90%; /* ইনপুট বক্সের প্রস্থ সামান্য কমানো */
+            width: 90%;
             padding: 10px;
-            margin: 10px auto; /* উপরে নিচে 10px স্পেস, স্বয়ংক্রিয়ভাবে সেন্টার */
+            margin: 10px auto;
             border: 1px solid #ccc;
             border-radius: 5px;
             text-align: center;
-            display: block; /* ইনপুট ফিল্ডটি ব্লক লেভেল করা */
+            display: block;
         }
 
         .btn {
-            margin-top: 15px;
+            margin-top: 10px;
             padding: 10px;
             width: 100%;
             background-color: #007BFF;
@@ -66,6 +66,16 @@
 
         .btn:hover {
             background-color: #0056b3;
+        }
+
+        .show-password {
+            margin-top: 5px;
+            background-color: #f4f4f4;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 14px;
+            color: #333;
         }
 
         /* Hidden Content */
@@ -89,6 +99,7 @@
         <div class="modal-content">
             <h2>Enter Password</h2>
             <input type="password" id="passwordInput" class="input-box" placeholder="Enter your password">
+            <button class="show-password" onclick="togglePassword()">👁 Show Password</button>
             <button class="btn" onclick="checkPassword()">Submit</button>
         </div>
     </div>
@@ -108,7 +119,16 @@
                 document.getElementById("passwordModal").style.display = "none"; // Hide modal
                 document.getElementById("content").style.display = "block"; // Show content
             } else {
-                alert("Wrong password! Try again.");
+                alert("❌ Wrong password! Try again.");
+            }
+        }
+
+        function togglePassword() {
+            let passwordField = document.getElementById("passwordInput");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
             }
         }
     </script>
