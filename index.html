@@ -12,13 +12,8 @@
     <pre id="output"></pre>
 
     <script>
-        async function getKey() {
-            const keyMaterial = new TextEncoder().encode("f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6");
-            const hashBuffer = await crypto.subtle.digest("SHA-256", keyMaterial);
-            return new Uint8Array(hashBuffer);
-        }
-
-        const IV = new Uint8Array(16); // 16-byte IV (Same IV used in encryption)
+        const SECRET_KEY = new TextEncoder().encode("f1e2d3c4b5a6e7f8g9h0a1b2c3d4e5f6g7h8i9j0k1l2m3n4").slice(0, 32); // Ensure 32-byte key
+        const IV = new Uint8Array(16); // 16-byte IV (Must match encryption IV)
 
         async function loadEncryptedFile() {
             const fileInput = document.getElementById("fileInput");
@@ -31,9 +26,10 @@
             const reader = new FileReader();
 
             reader.onload = async function(event) {
-                const encryptedData = event.target.result.trim(); // Read file content
+                const encryptedHex = event.target.result.trim(); // Read file content
                 try {
-                    const decryptedText = await decryptHTML(encryptedData);
+                    const encryptedBytes = hexToBytes(encryptedHex); // Convert Hex to Uint8Array
+                    const decryptedText = await decryptHTML(encryptedBytes);
                     document.getElementById("output").innerText = decryptedText;
                 } catch (error) {
                     console.error("Decryption Error:", error);
@@ -44,32 +40,29 @@
             reader.readAsText(file); // Read file as text
         }
 
-        async function decryptHTML(encryptedData) {
-            const key = await getKey(); // Generate a proper 32-byte key
+        async function decryptHTML(encryptedBytes) {
             const cryptoKey = await crypto.subtle.importKey(
                 "raw",
-                key,
+                SECRET_KEY,
                 { name: "AES-CTR" },
                 false,
                 ["decrypt"]
             );
 
-            // Convert hex string to Uint8Array
-            const encryptedBuffer = hexToBytes(encryptedData);
-
             const decrypted = await crypto.subtle.decrypt(
-                { name: "AES-CTR", counter: IV, length: 64 },
+                { name: "AES-CTR", counter: IV, length: 128 }, // AES-CTR requires a counter & length
                 cryptoKey,
-                encryptedBuffer
+                encryptedBytes
             );
 
             return new TextDecoder().decode(decrypted);
         }
 
+        // Function to Convert Hex String to Uint8Array
         function hexToBytes(hex) {
-            const bytes = new Uint8Array(hex.length / 2);
-            for (let i = 0; i < bytes.length; i++) {
-                bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+            let bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) {
+                bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
             }
             return bytes;
         }
