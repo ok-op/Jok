@@ -3,119 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML ENCRYPTION</title>
+    <title>Encrypted Page</title>
     <style>
+        /* Optional styles for the page */
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f4f4f9;
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: auto;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        .message {
-            margin: 20px 0;
-            font-size: 1.2em;
-            color: #333;
-        }
-        .file-input {
-            margin: 20px 0;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        footer {
-            margin-top: 50px;
-            font-size: 0.9em;
-            color: #777;
+        #content {
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>HTML ENCRYPTION</h1>
-        <p class="message">Protect Your Code With Cross Encoding Methods</p>
 
-        <input type="file" class="file-input" id="fileInput">
-        <br><br>
-
-        <button class="button" onclick="encryptAndDownload()">Encrypt & Download</button>
-
-        <div class="message">
-            ✅ Encrypt Successful!
-        </div>
-
-        <footer>
-            © 2025 BJ Tricks | <a href="#" style="color: #4CAF50;">Learn More About Us</a>
-        </footer>
+    <h1>Encrypted HTML Content</h1>
+    <div id="content">
+        <pre id="encrypted-content">
+            <!-- Place the encrypted content here -->
+            q[[[[G [FY YEq[[[[[[[[GJE3/67[>58)"+/245GTJEq[[[[[[[[G[FYYE+ [" [8[,[8 [>[6GTEqq[[[[[[[[G[FYY[FYVY[FY2YEq[[[[[[[[G EG Eqq[[[[[[[[G[FYY[FY :?SRYE> [][?GTEqq[[[[[[[[G [FYYEq[[[[[[[[[[[[❾[> [(Zq[[[[[[[[GT Eqq[[[[[[[[G Eq[[[[[[[[[[[[Ò[IKIN[91[/ [[G[ FYXY[FY A[XO8:=NK@YE7 [6 [:[.GTEq[[[[[[[[GT Eq[[[[GT Eqq[[[[G Eq[[[[[[[[[ :?SR[q[[[[[[[[[[[[[2[F[U>92S\2\R@q[[[[[[[[[[[[[S2UU[FFF[KR[q[[[[[[[[[[[[[[[[ S\5[[\R@q[[[[[[[[[[[[[[[[  @q[[[[[[[[[[[[qq[[[[[[[[[[[[[[F[2U K&@q[[[[[[[[[[[[[  [F[[=) SR@q[[[[[[[[[[[[q[[[[[[[[[[[[  U[F[SR[q[[[[[[[[[[[[[[[[[8[F[U U @q[[[[[[[[[[[[[[[[[ 8[F[ 3/67S8R@q[[[[[[[[[[[[[[[[> =S 8R@q[[[[[[[[[[[[@qq[[[[[[[[[[[[  U :/SR@q[[[[[[[[qq[[[[[[[[TT[> [[[[W[[3/67[  [q[[[[[[[[[ 3/67SR[q[[[[[[[[[[[[TT[> [[[[ [[GE[[ tags const bodyContent = content.match(/]*>([\s\S]*?)<\/body>/)[1]; // Encrypting the main content (simple XOR encryption for demonstration) const encryptedBody = encryptContent(bodyContent); // Replacing the original body content with encrypted content return content.replace(bodyContent, encryptedBody); } // Simple XOR encryption function function encryptContent(content) { let encrypted = ''; const key = 123; // XOR key for (let i = 0; i < content.length; i++) { encrypted += String.fromCharCode(content.charCodeAt(i) ^ key); } return encrypted; } // Download the encrypted file function downloadEncryptedFile(content) { const blob = new Blob([content], { type: 'text/html' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'encrypted_file.html'; link.click(); }
+            <!-- Your full encrypted content goes here -->
+        </pre>
     </div>
 
     <script>
-        function encryptAndDownload() {
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput.files.length === 0) {
-                alert('No file chosen');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                let fileContent = e.target.result;
-                let encryptedContent = encryptHTML(fileContent);
-                downloadEncryptedFile(encryptedContent);
-            };
-
-            reader.readAsText(file);
-        }
-
-        // Encrypting only the main content, keeping HTML structure intact
-        function encryptHTML(content) {
-            // Extracting the main content part between <body> and </body> tags
-            const bodyContent = content.match(/<body[^>]*>([\s\S]*?)<\/body>/)[1];
-            
-            // Encrypting the main content (simple XOR encryption for demonstration)
-            const encryptedBody = encryptContent(bodyContent);
-
-            // Replacing the original body content with encrypted content
-            return content.replace(bodyContent, encryptedBody);
-        }
-
-        // Simple XOR encryption function
-        function encryptContent(content) {
-            let encrypted = '';
-            const key = 123; // XOR key
+        // Simple XOR decryption function
+        function decryptContent(content) {
+            let decrypted = '';
+            const key = 123; // XOR key (same key used for encryption)
             for (let i = 0; i < content.length; i++) {
-                encrypted += String.fromCharCode(content.charCodeAt(i) ^ key);
+                decrypted += String.fromCharCode(content.charCodeAt(i) ^ key);
             }
-            return encrypted;
+            return decrypted;
         }
 
-        // Download the encrypted file
-        function downloadEncryptedFile(content) {
-            const blob = new Blob([content], { type: 'text/html' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'encrypted_file.html';
-            link.click();
-        }
+        // Function to replace encrypted content with decrypted content
+        window.onload = function () {
+            let encryptedContent = document.getElementById('encrypted-content').innerText; // Get encrypted content
+            let decryptedContent = decryptContent(encryptedContent); // Decrypt it
+            document.getElementById('encrypted-content').innerText = decryptedContent; // Replace with decrypted content
+        };
     </script>
+
 </body>
 </html>
