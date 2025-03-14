@@ -4,47 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encrypted Page</title>
-    <style>
-        /* Optional styles for the page */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #content {
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 5px;
-        }
-    </style>
 </head>
 <body>
+    <h1>Encrypted Content</h1>
+    <div id="content"></div>
 
-    <h1>Encrypted HTML Content</h1>
-    <div id="content">
-        <pre id="encrypted-content">
-            <!-- Place the encrypted content here -->
-            q[[[[G [FY YEq[[[[[[[[GJE3/67[>58)"+/245GTJEq[[[[[[[[G[FYYE+ [" [8[,[8 [>[6GTEqq[[[[[[[[G[FYY[FYVY[FY2YEq[[[[[[[[G EG Eqq[[[[[[[[G[FYY[FY :?SRYE> [][?GTEqq[[[[[[[[G [FYYEq[[[[[[[[[[[[❾[> [(Zq[[[[[[[[GT Eqq[[[[[[[[G Eq[[[[[[[[[[[[Ò[IKIN[91[/ [[G[ FYXY[FY A[XO8:=NK@YE7 [6 [:[.GTEq[[[[[[[[GT Eq[[[[GT Eqq[[[[G Eq[[[[[[[[[ :?SR[q[[[[[[[[[[[[[2[F[U>92S\2\R@q[[[[[[[[[[[[[S2UU[FFF[KR[q[[[[[[[[[[[[[[[[ S\5[[\R@q[[[[[[[[[[[[[[[[  @q[[[[[[[[[[[[qq[[[[[[[[[[[[[[F[2U K&@q[[[[[[[[[[[[[  [F[[=) SR@q[[[[[[[[[[[[q[[[[[[[[[[[[  U[F[SR[q[[[[[[[[[[[[[[[[[8[F[U U @q[[[[[[[[[[[[[[[[[ 8[F[ 3/67S8R@q[[[[[[[[[[[[[[[[> =S 8R@q[[[[[[[[[[[[@qq[[[[[[[[[[[[  U :/SR@q[[[[[[[[qq[[[[[[[[TT[> [[[[W[[3/67[  [q[[[[[[[[[ 3/67SR[q[[[[[[[[[[[[TT[> [[[[ [[GE[[ tags const bodyContent = content.match(/]*>([\s\S]*?)<\/body>/)[1]; // Encrypting the main content (simple XOR encryption for demonstration) const encryptedBody = encryptContent(bodyContent); // Replacing the original body content with encrypted content return content.replace(bodyContent, encryptedBody); } // Simple XOR encryption function function encryptContent(content) { let encrypted = ''; const key = 123; // XOR key for (let i = 0; i < content.length; i++) { encrypted += String.fromCharCode(content.charCodeAt(i) ^ key); } return encrypted; } // Download the encrypted file function downloadEncryptedFile(content) { const blob = new Blob([content], { type: 'text/html' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'encrypted_file.html'; link.click(); }
-            <!-- Your full encrypted content goes here -->
-        </pre>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1-crypto-js.js"></script>
     <script>
-        // Simple XOR decryption function
-        function decryptContent(content) {
-            let decrypted = '';
-            const key = 123; // XOR key (same key used for encryption)
-            for (let i = 0; i < content.length; i++) {
-                decrypted += String.fromCharCode(content.charCodeAt(i) ^ key);
+        // Original HTML content to encrypt
+        const originalContent = `
+            <h1>Welcome to the Encrypted Page!</h1>
+            <p>This content is sensitive and can only be viewed with the correct password.</p>
+        `;
+
+        // Secret password to encrypt and decrypt
+        const secretKey = "woodcraft"; // Change this to your secret key
+
+        // Encrypt the content using AES
+        const encryptedContent = CryptoJS.AES.encrypt(originalContent, secretKey).toString();
+
+        // Function to decrypt the content using AES
+        function decryptContent(encrypted, password) {
+            const bytes = CryptoJS.AES.decrypt(encrypted, password);
+            const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+            if (decrypted) {
+                return decrypted;
+            } else {
+                alert("Incorrect password!");
+                return null;
             }
-            return decrypted;
         }
 
-        // Function to replace encrypted content with decrypted content
-        window.onload = function () {
-            let encryptedContent = document.getElementById('encrypted-content').innerText; // Get encrypted content
-            let decryptedContent = decryptContent(encryptedContent); // Decrypt it
-            document.getElementById('encrypted-content').innerText = decryptedContent; // Replace with decrypted content
-        };
-    </script>
+        // Prompt the user for a password
+        const userPassword = prompt("Enter the password to view content:");
 
+        // Decrypt the content if password is correct
+        const decryptedContent = decryptContent(encryptedContent, userPassword);
+
+        // Display decrypted content if password is correct
+        if (decryptedContent) {
+            document.getElementById("content").innerHTML = decryptedContent;
+        }
+    </script>
 </body>
 </html>
