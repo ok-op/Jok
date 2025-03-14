@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Encryption</title>
+    <title>HTML ENCRYPTION</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,15 +79,27 @@
             
             reader.onload = function(e) {
                 let fileContent = e.target.result;
-                let encryptedContent = encryptContent(fileContent);
+                let encryptedContent = encryptHTML(fileContent);
                 downloadEncryptedFile(encryptedContent);
             };
 
             reader.readAsText(file);
         }
 
+        // Encrypting only the main content, keeping HTML structure intact
+        function encryptHTML(content) {
+            // Extracting the main content part between <body> and </body> tags
+            const bodyContent = content.match(/<body[^>]*>([\s\S]*?)<\/body>/)[1];
+            
+            // Encrypting the main content (simple XOR encryption for demonstration)
+            const encryptedBody = encryptContent(bodyContent);
+
+            // Replacing the original body content with encrypted content
+            return content.replace(bodyContent, encryptedBody);
+        }
+
+        // Simple XOR encryption function
         function encryptContent(content) {
-            // Simple XOR encryption as an example (you can use more advanced encryption methods)
             let encrypted = '';
             const key = 123; // XOR key
             for (let i = 0; i < content.length; i++) {
@@ -96,6 +108,7 @@
             return encrypted;
         }
 
+        // Download the encrypted file
         function downloadEncryptedFile(content) {
             const blob = new Blob([content], { type: 'text/html' });
             const link = document.createElement('a');
